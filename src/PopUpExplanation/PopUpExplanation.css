@@ -1,0 +1,22 @@
+.greater-than-entity{
+    font-family: 'Poppins', sans-serif;
+    margin: auto;
+    color: #ffffff;
+    text-align: center;
+    font-size: 100px;
+    margin-top: -1rem;
+}
+
+
+.number-style{
+    font-family: 'Poppins', sans-serif;
+    margin: auto;
+    color: #023473;
+    text-align: center;
+    font-size: 100px;
+    margin-top: -0.5rem;
+    font-weight: 700;
+}
+
+
+

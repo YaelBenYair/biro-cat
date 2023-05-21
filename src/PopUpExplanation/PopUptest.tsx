@@ -1,37 +1,89 @@
-import {Box, Button, Container, Typography} from "@mui/material";
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 import CloseIcon from '@mui/icons-material/Close';
-import React, { useEffect } from "react";
 import {PopUpExplanationProps} from "../Interface/Interface";
 import {EHebText} from "../hebText";
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import './PopUpExplanation.css';
 import Checkbox from '@mui/material/Checkbox';
+import { useTheme } from '@mui/material/styles';
+import { useState, useEffect } from 'react';
+
+const style = {
+  position: 'absolute' as 'absolute',
+//   top: '50%',
+  top: {xs: '90%', md: '50%'},
+  left: '50%',
+//   right: '-50%',
+  transform: 'translate(-50%, -50%)',
+  width: '70%',
+  backgroundColor: '#023473',
+  borderRadius: '20px',
+  boxShadow: 24,
+  p: 2,
+  outline: 'none',
+//   marginRight: '20px',
+};
 
 
-const PopUpExplanation: React.FC<PopUpExplanationProps> = ({onCloseLogin}) =>{
-    console.log()
-
+export const BasicModal: React.FC<PopUpExplanationProps> = ({ onCloseLogin }) => {
+    const [isLargeScreen, setIsLargeScreen] = useState<boolean>(window.innerWidth > 900);
+    const [open, setOpen] = React.useState(true);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
     const [checked, setChecked] = React.useState(false);
+
+
+    const handleContinuedButton = () =>{
+        if (checked) {
+            localStorage.setItem('wontExplanation', 'no')
+        }
+        onCloseLogin()
+    } 
+
+
+  
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
     };
 
+    useEffect(() => {
+        const handleResize = () => {
+          setIsLargeScreen(window.innerWidth > 900);
+        };
+    
+        window.addEventListener('resize', handleResize);
+    
+        return () => {
+          window.removeEventListener('resize', handleResize);
+        };
+      }, []);
 
-    return(
-      <>
-      <Container fixed>
-          <Box sx={{
-              height: '600px',
-              width: {xs: '300px', md: '1100px'},
-              backgroundColor: '#023473',
-              borderRadius: '20px',
-              boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
-              position: 'relative',
-          }}>
+  return (
+    <div style={{border: 'unset'}}>
+      {/* <Button onClick={handleOpen}>Open modal</Button> */}
+      <Modal
+        sx={{
+            // '&::-webkit-scrollbar':{
+            //     width: '0',
+            // }
+        }}
+        style={{ overflow: 'scroll', width: '100%',
+        }}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+        <Box>
               <Box sx={{
-                  padding: '10px',
+                //   padding: '10px',
               }}>
                   <CloseIcon onClick={onCloseLogin} sx={{
                       cursor: 'pointer',
@@ -43,8 +95,9 @@ const PopUpExplanation: React.FC<PopUpExplanationProps> = ({onCloseLogin}) =>{
               </Box>
 
               <Box sx={{
-                  height: '220px',
-                  display: 'block'
+                //   height: '220px',
+                  display: 'block',
+                  padding: '10px 0 30px 0',
               }}>
                   <Typography
                       variant={"h3"}
@@ -75,12 +128,13 @@ const PopUpExplanation: React.FC<PopUpExplanationProps> = ({onCloseLogin}) =>{
                   height: 'fit-content',
               }}>
                   <Grid item xs={12}>
-                      <Grid container justifyContent="center" spacing={5} sx={{
-                          paddingBottom: '25px',
+                      <Grid container justifyContent="center" rowSpacing={2} sx={{
+                          paddingBottom: {md:'10px'},
                       }}>
                           {[0, 1, 2, 3, 4].map((value) => (
-                              <Grid key={value} item>
+                              <Grid lg={2} md={2} sm={7} xs={9} key={value} item>
                                   {value % 2 === 0?
+                                  <Box>
                                       <Paper
                                           sx={{
                                               display: 'flex',
@@ -91,10 +145,27 @@ const PopUpExplanation: React.FC<PopUpExplanationProps> = ({onCloseLogin}) =>{
                                               backgroundColor: (theme) =>
                                                   theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
                                               borderRadius: '50%',
+                                              margin: 'auto',
                                           }}
                                       ><span className="number-style">
                                         {value ? (value === 2 ? 2 : 3) : 1}
                                         </span></Paper>
+                                        <Box sx={{
+                                            textAlign: 'center',
+                                            color: '#ffffff',
+                                        }}>
+                                        {!isLargeScreen ? 
+                                            (value ? (value === 2 ? <p>{EHebText.STEP_TWO}</p> 
+                                            : 
+                                            <p>{EHebText.STEP_THREE} <span style={{fontWeight: 600}}>{EHebText.STEP_THREE_BOLD}</span></p>) 
+                                            : 
+                                            <p>{EHebText.STEP_ONE}</p>)
+                                        :
+                                        null
+                                        }
+                                        </Box>
+                                        
+                                    </Box>
                                   :
                                       <Box
                                           sx={{
@@ -104,6 +175,9 @@ const PopUpExplanation: React.FC<PopUpExplanationProps> = ({onCloseLogin}) =>{
                                               borderRadius: '50%',
                                               justifyContent: 'center',
                                               alignItems: 'center',
+                                              transform: {sm: 'rotate(-90deg)', md: 'rotate(0)'},
+                                              textAlign: 'center',
+                                              margin: 'auto',
                                           }}
                                       ><span className="greater-than-entity">&#62;</span></Box>
                                   }
@@ -114,21 +188,35 @@ const PopUpExplanation: React.FC<PopUpExplanationProps> = ({onCloseLogin}) =>{
                   </Grid>
               </Box>
 
+            {isLargeScreen && 
               <Box>
                     <Grid item xs={12}>
                         <Grid container justifyContent="center" spacing={19} sx={{
                             paddingBottom: '25px',
+                            width: '100%',
+                            
+                            // alignItems: 'center',
                         }}>
                             {[0, 1, 2].map((value) => (
-                                <Grid key={value} item>
+                                <Grid md={4} lg={4} key={value} item sx={{
+                                    // display: 'flex',
+                                    // alignContent: 'center',
+                                    // alignItems: 'center',
+                                    // "& .css-15qgr6d-MuiGrid-root .MuiGrid-item":{
+                                    //     paddingLeft: 'none !important',
+                                    // }
+                                }}>
                                     <Box sx={{
                                         // border: '2px solid green',
-                                        width: '200px',
+                                        width: {lg: '250px', md: '200px', sm: '100px'},
                                         textAlign: 'center',
                                         color: '#f4f6f8',
-                                        fontSize: '12px'
+                                        fontSize: '12px',
+                                        paddingRight: '20px'
+                                        // margin: 'auto'
+                                        
                                     }}>
-                                        {value ? (value === 1 ? <p>{EHebText.STEP_TWO}</p> 
+                                        {value ? (value === 1 ? <p style={{width: '100%', textAlign: 'center'}}>{EHebText.STEP_TWO}</p> 
                                         : 
                                         <p>{EHebText.STEP_THREE} <span style={{fontWeight: 600}}>{EHebText.STEP_THREE_BOLD}</span></p>) 
                                         : 
@@ -140,13 +228,15 @@ const PopUpExplanation: React.FC<PopUpExplanationProps> = ({onCloseLogin}) =>{
                                 
                     </Grid>
                     
-              </Box>
+              </Box>}
               <Box sx={{
                 textAlign: 'left',
                 paddingLeft: '50px',
+                paddingTop: '10px',
                 color: '#f4f6f8',
                 fontSize: '30px',
                 fontWeight: 500,
+                marginBottom: 10,
               }}>
                  <p style={{padding: 0, margin: 0}}>{EHebText.END_POPUP}</p>
               </Box>
@@ -158,33 +248,42 @@ const PopUpExplanation: React.FC<PopUpExplanationProps> = ({onCloseLogin}) =>{
                 position: 'absolute',
                 transform: 'translate(50%)',
                 right: '50%',
-                bottom: '-1rem',
+                bottom: {md: '-2rem', xs: '-1rem'},
                 boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
                 borderRadius: '8px',
               }}>
                 <Box sx={{
-                    padding: '1px 1px 2px 8px',
+                    padding: '5px',
+                    display: 'flex',
+                    // marginBottom: '15px',
                 }}>
-                    <Checkbox
-                        checked={checked}
-                        onChange={handleChange}
-                        size="small"
-                        inputProps={{ 'aria-label': 'controlled' }}
-                    />
-                    <span>{EHebText.CHACKBOX}</span>
+                    <Box>
+                        <Checkbox
+                            checked={checked}
+                            onChange={handleChange}
+                            size="small"
+                            inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                    </Box>
+                        <Box sx={{
+                            width: {xs: '230px', md: '100%'}
+                        }}>
+                            <span>{EHebText.CHACKBOX}</span>
+                        </Box>
                     </Box>
               </Box>
           </Box>
 
           <Box width={'100%'} sx={{
-            position: 'flex',
-            width: '100%',
-            marginTop: '40px',
-            justifyContent: 'center',
-            alignItems: 'center',
+            display: 'flex',
+            position: 'absolute',
+            transform: 'translate(50%)',
+            right: '50%',
+            bottom: {md: '-7rem', xs: '-6rem'},
           }}>
           <Button
             variant="contained"
+            onClick={handleContinuedButton}
             sx={{
                 
                 borderRadius: '8px',
@@ -201,13 +300,20 @@ const PopUpExplanation: React.FC<PopUpExplanationProps> = ({onCloseLogin}) =>{
         >המשך
         </Button>
         </Box>
-        </Container>
-      </>
-    );
+
+        </Box>
+
+      </Modal>
+    </div>
+  );
 }
 
 
-export default PopUpExplanation
 
 
-
+// <Typography id="modal-modal-title" variant="h6" component="h2">
+//             Text in a modal
+//           </Typography>
+//           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+//             Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+//           </Typography>

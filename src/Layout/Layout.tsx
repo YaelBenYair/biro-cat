@@ -3,16 +3,28 @@ import {AppBar, Box, Button, Container, Toolbar} from "@mui/material";
 import TypoHeadline from "../TypoHeadline/TypoHeadline";
 import {EHebText} from "../hebText";
 import PopUpExplanation from "../PopUpExplanation/PopUpExplanation";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import { BasicModal } from "../PopUpExplanation/PopUptest";
+
 
 
 const Layout = () =>{
 
-    const [closeIcon, setCloseIcon] = useState<boolean>(false)
+    const [closeIcon, setCloseIcon] = useState<boolean>(true)
+    const [explanationShow, setExplanationShow] = useState<boolean>(true)
 
     const handleClose = () => {
         setCloseIcon(!closeIcon)
     }
+    
+    useEffect(()=>{
+        const explanation = localStorage.getItem('wontExplanation')
+        if (explanation === 'no') {
+            setExplanationShow(false)
+        }else{
+            setCloseIcon(false)
+        }
+    }, [])
 
     return(
         <>
@@ -35,7 +47,7 @@ const Layout = () =>{
                     justifyContent: 'center',
                     // border: '2px solid black',
                     minHeight: "87vh",
-                    position: 'relative',
+
                 }}>
 
                     <Box>
@@ -67,16 +79,16 @@ const Layout = () =>{
                             </Button>
                         </Box>
                     </Box>
-                    {!closeIcon &&
-                    <Box sx={{
-                        position: 'absolute',
-                        transform: 'translate(50%)',
-                        right: '50%',
-                        bottom: {xs: '50rem', md: '6rem'},
-                        // zIndex: -1,
-                    }}>
-                        <PopUpExplanation onCloseLogin={handleClose}/>
-                    </Box>
+
+                    {explanationShow &&
+                        (!closeIcon &&
+                        
+                        <>
+                            {/* <PopUpExplanation onCloseLogin={handleClose}/> */}
+                            <BasicModal onCloseLogin={handleClose}/>
+                            </>
+                
+                        )
                     }
                 </Box>
             </Container>

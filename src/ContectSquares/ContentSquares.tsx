@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import {Box, TextField, Typography} from "@mui/material";
 import {EHebText} from "../hebText";
+import Square from '../Square/Square';
 
 const s = {
     "& .MuiInputLabel-root": { color: '#000000'},//styles the label
@@ -17,6 +18,28 @@ const s = {
 
 const ContentSquares = () =>{
 
+    const [revenues, setRevenues] = React.useState<number>(0)
+    const [expenses, setExpenses] = React.useState<number>(0)
+    const [selfFinancing, setSelfFinancing] = React.useState<number>(0)
+    const [administrative, setAdministrative] = React.useState<number>(0)
+
+    
+    const handleRevenuesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRevenues(Number(event.target.value))
+    };
+
+    const handleExpensesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setExpenses(Number(event.target.value))
+    };
+
+    const handleSelfFinancingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSelfFinancing(Number(event.target.value))
+    };
+    
+    const handleAdministrativeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setAdministrative(Number(event.target.value))
+    };
+
     return(
         <>
             <Box sx={{
@@ -24,7 +47,11 @@ const ContentSquares = () =>{
             }}>
             <Grid item xs={12}>
                 <Grid container justifyContent="center" spacing={4}>
-                    {[0, 1, 2, 4].map((value) => (
+                    <Square headline={EHebText.REVENUES} plaseholder={EHebText.REVENUES_PLACEHOLDER} onChangeText={handleRevenuesChange} value={revenues}/>
+                    <Square headline={EHebText.EXPENSES} plaseholder={EHebText.EXPENSES_PLACEHOLDER} onChangeText={handleExpensesChange} value={expenses}/>
+                    <Square headline={EHebText.SELF_FINANCING} plaseholder={EHebText.SELF_FINANCING_PLACEHOLDER} subHeadline={EHebText.SELF_FINANCING_EXP} onChangeText={handleSelfFinancingChange} value={selfFinancing}/>
+                    <Square headline={EHebText.ADMINISTRATIVE_AND_GENERAL_EXPENSES} plaseholder={EHebText.ADMINISTRATIVE_AND_GENERAL_EXPENSES_PLACEHOLDER} onChangeText={handleAdministrativeChange} value={administrative}/>
+                    {/* {[0, 1, 2, 4].map((value) => (
                         <Grid key={value} item>
                             <Paper
                                 sx={{
@@ -76,7 +103,7 @@ const ContentSquares = () =>{
                                 </Box>
                             </Paper>
                         </Grid>
-                    ))}
+                    ))} */}
                 </Grid>
             </Grid>
             </Box>
