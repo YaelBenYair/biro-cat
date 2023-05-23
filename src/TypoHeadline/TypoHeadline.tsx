@@ -6,7 +6,8 @@ const TypoHeadline = () => {
     return(
         <>
             <Box sx={{
-                marginBottom: '70px'
+                marginBottom: {md: '70px', xs: '20px'},
+                marginTop: {xs: '25px'},
             }}>
                 <Typography
                     variant={"h3"}

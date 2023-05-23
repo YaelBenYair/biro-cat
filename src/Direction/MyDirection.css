@@ -1,0 +1,15 @@
+
+.div-direction{
+    background-image: url('https://final-yael.s3.amazonaws.com/biroCatBackgroundBig.png');
+    background-size: cover;
+    height: 100vh;
+    margin: auto;
+    background-repeat: no-repeat;
+}
+
+@media screen and (max-width: 600px){
+    .div-direction{
+        background-repeat: repeat-y;
+        background-size: auto;
+    }
+}

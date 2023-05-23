@@ -3,16 +3,20 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import {Box, TextField, Typography} from "@mui/material";
 import {EHebText} from "../hebText";
+import CheckIcon from '@mui/icons-material/Check';
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import { CALCULATE_ACTION, useCalculateContext } from '../CalculateContext';
 
 const s = {
     "& .MuiInputLabel-root": { color: '#000000'},//styles the label
     "& .MuiOutlinedInput-root": {
         "& > fieldset": {borderRadius: '10px', color: '#000000'},
     },
-    "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": {textAlign: 'center'},
+    "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": {textAlign: 'center', fontSize: '14px'},
     backgroundColor: '#F2F6F8',
     borderRadius: '10px',
-    maxWidth: '80%'
+    maxWidth: '80%',
+    
 }
 
 
@@ -26,6 +30,8 @@ interface ISquareProps {
 
 const Square = (props: ISquareProps): JSX.Element =>{
 
+    const { calculateState, calculateDispatch } = useCalculateContext();
+
     const {headline, plaseholder, subHeadline, onChangeText, value} = props
 
     return(
@@ -33,31 +39,36 @@ const Square = (props: ISquareProps): JSX.Element =>{
         <Grid item>
             <Paper
                 sx={{
+                    position: 'relative',
                     display: 'flex',
-                    alignItems: 'center',
+                    // alignItems: 'center',
                     justifyContent: 'center',
-                    height: 250,
-                    width: 250,
+                    height: 230,
+                    width: 230,
                     backgroundColor: (theme) =>
                         theme.palette.mode === 'dark' ? '#F2F6F8' : '#3c3d41',
-                    borderRadius: '15px'
+                    borderRadius: '15px',
+                    // paddingTop: '30px',
                 }}
             >
                 <Box sx={{
                     // display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    // alignItems: 'center',
+                    // justifyContent: 'center',
+                    
                 }}>
                 <Box sx={{
                     // display: 'block',
                     width: '100%',
-                    marginBottom: '30px',
+                    marginBottom: '15px',
+                    marginTop: '25px',
                 }}>
                 <Typography sx={{
                     // display: 'block',
                     textAlign: 'center',
                     color: '#ffffff',
                     margin: 'auto',
+                    width: '100%',
                 }}
                     variant={"h4"}
                 >
@@ -74,6 +85,12 @@ const Square = (props: ISquareProps): JSX.Element =>{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    position: 'absolute',
+                    bottom: '14px',
+                    transform: 'translate(50%)',
+                    right: '50%',
+                    width: '200px',
+                    
                 }}>
                     <TextField sx={s}
                         // value={value}
@@ -85,6 +102,29 @@ const Square = (props: ISquareProps): JSX.Element =>{
                         required/>
                 </Box>
                 </Box>
+
+                {calculateState.calculateButton && 
+                    <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'absolute',
+                        bottom: '-20px',
+                        transform: 'translate(50%)',
+                        right: '98%',
+                    
+                        width: '200px',
+                        
+                        
+                    }}>
+                        <CheckRoundedIcon fontSize="large" sx={{
+                            color:'#F2C46E',
+                            border: '2px solid #3C3D41',
+                            backgroundColor: '#ffffff',
+                            borderRadius: '8px',
+                        }}/>
+                    </Box>
+                }
             </Paper>
         </Grid>
         </>

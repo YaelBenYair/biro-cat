@@ -5,6 +5,7 @@ import {Route, Routes} from "react-router-dom";
 import Layout from "./Layout/Layout";
 import MyDirection from "./Direction/MyDirection";
 import { ThemeProvider, createTheme, useMediaQuery } from '@mui/material';
+import { CalculateProvider } from './CalculateContext';
 
 const theme = createTheme({
   palette: {
@@ -29,6 +30,7 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
+        <CalculateProvider>
         <MyDirection>
           <Routes>
             <Route path={'/'} element={<Layout />}>
@@ -36,6 +38,7 @@ function App() {
             </Route>
           </Routes>
         </MyDirection>
+        </CalculateProvider>
       </ThemeProvider>
     </>
   );
