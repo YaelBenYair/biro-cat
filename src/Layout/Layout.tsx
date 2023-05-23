@@ -7,6 +7,10 @@ import PopUpExplanation from "../PopUpExplanation/PopUpExplanation";
 import {useEffect, useState} from "react";
 import { BasicModal } from "../PopUpExplanation/PopUptest";
 import { CALCULATE_ACTION, useCalculateContext } from '../CalculateContext';
+import Alert, { AlertColor } from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
+import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
+import PrintRoundedIcon from '@mui/icons-material/PrintRounded';
 
 
 interface ICalaulateProps {
@@ -21,57 +25,42 @@ const Layout = () =>{
 
     const [closeIcon, setCloseIcon] = useState<boolean>(true)
     const [explanationShow, setExplanationShow] = useState<boolean>(true)
-    const [calculateButtonB, setCalculateButton] = useState<boolean>(false)
-    const [exIn, setExIn] = useState<boolean>(true)
-    const [self, setSelf] = useState<boolean>(true)
-    const [admini, setAdmini] = useState<boolean>(true)
 
     const { calculateState, calculateDispatch } = useCalculateContext();
-    const {administrative, expenses, revenues, selfFinancing} = calculateState
+    const {administrative, expenses, revenues, selfFinancing, errorType} = calculateState
 
     const handleClose = () => {
         setCloseIcon(!closeIcon)
     }
 
+
     const handleCalaulate = (event: MouseEvent) => {
         console.log(calculateState)
 
-        setCalculateButton(true)
         const b = true
         let xin = true
         let sl = true
         let ad = true
 
         if (expenses !== null && selfFinancing !== null && administrative !== null && revenues !== null){
-            const ex = expenses + selfFinancing;
-            const inRe = administrative + revenues;
+            const ex = expenses + administrative;
+            const inRe =  revenues + selfFinancing;
 
             if (ex > inRe) {
-                setExIn(false);
                 xin = false;
             }
             if (selfFinancing < ex * 0.1) {
-                setSelf(false);
                 sl = false;
 
             }
             if (administrative > ex * 0.22) {
-                setAdmini(false);
                 ad = false;
             }
-
-            // calculateDispatch({
-            //     type: CALCULATE_ACTION.SET_NUMBERS_CALCULATE,
-            //     calculateButton: calculateButtonB,
-            //     expensesHigherThanIncome: exIn,
-            //     higheSelfFinancingThan: self,
-            //     lessAdministrativeExpenses: admini,
-            // })
 
             calculateDispatch({
                 type: CALCULATE_ACTION.SET_NUMBERS_CALCULATE,
                 calculateButton: b,
-                expensesHigherThanIncome: xin,
+                expensesLessThanIncome: xin,
                 higheSelfFinancingThan: sl,
                 lessAdministrativeExpenses: ad,
             })
@@ -92,7 +81,7 @@ const Layout = () =>{
     return(
         <>
             <Container fixed>
-                <Box>
+                <Box sx={{marginRight: '10px'}}>
                     <Toolbar>
                         <img src={'https://final-yael.s3.amazonaws.com/logoBiroCat.png'}
                              alt={'logo'}
@@ -116,6 +105,23 @@ const Layout = () =>{
                     <Box>
                         <TypoHeadline/>
                         <ContentSquares/>
+
+                        {calculateState.isException &&
+                            <Stack sx={{ width: '80%', margin: 'auto', marginTop: '50px'}} spacing={2}>
+                            <Alert variant="outlined" severity={calculateState.errorType as AlertColor} sx={{
+                                border: errorType === 'error' ? '10px solid #BF8174' : '10px solid #F2C46E',
+                                backgroundColor: '#ffffff',
+                                "& .css-1vooibu-MuiSvgIcon-root":{
+                                    fill: errorType === 'error' ? '#BF8174' : '#F2C46E',
+                                    marginLeft: '10px',
+                                }
+                            }}>
+                              {calculateState.exceptionText}
+                            </Alert>
+                            </Stack>
+                        }
+
+                        {!calculateState.calculateButton?
                         <Box width={'100%'}
                             sx={{
                                 display: 'flex',
@@ -139,11 +145,66 @@ const Layout = () =>{
                                 }}
                                 size="large"
                                 onClick={handleCalaulate}
-                                disabled={calculateState.disabledButton}
+                                disabled={calculateState.administrative === null || calculateState.expenses === null || calculateState.selfFinancing === null || calculateState.revenues === null}
                             >
                                 {EHebText.BUTTON_CALCULATE}
                             </Button>
                         </Box>
+                        :
+                        <Box width={'100%'}
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                margin: 'auto',
+                                marginTop: '50px',
+                                marginBottom: '30px',
+                                width: '50%'
+                            }}
+                        >
+                            <Box sx={{
+                                margin: 'auto',
+                            }}>
+                            <Button
+                                variant="contained"
+                                sx={{
+                                    margin: 'auto',
+                                    borderRadius: '8px',
+                                    backgroundColor: '#023473',
+                                    '&:hover': {
+                                        backgroundColor: '#022a5e',
+                                    },
+                                    height: '60px',
+                                    width: '60px',
+                                    fontSize: '20px',
+                                    marginLeft: '30px',
+                                }}
+                                size="large"
+                                onClick={handleCalaulate}
+                            >
+                                <ShareRoundedIcon/>
+                            </Button>
+                            <Button
+                                variant="contained"
+                                sx={{
+                                    margin: 'auto',
+                                    borderRadius: '8px',
+                                    backgroundColor: '#023473',
+                                    '&:hover': {
+                                        backgroundColor: '#022a5e',
+                                    },
+                                    height: '60px',
+                                    width: '60px',
+                                    fontSize: '20px',
+                                }}
+                                size="large"
+                                onClick={handleCalaulate}
+                            >
+                                <PrintRoundedIcon/>
+                            </Button>
+                            </Box>
+                        </Box>
+                        
+                            }
                     </Box>
 
                     {explanationShow &&

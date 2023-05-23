@@ -1,17 +1,21 @@
 import { createContext, useContext, useReducer, ReactNode, Dispatch } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { EHebText } from "./hebText";
+import { EException } from "./Exceptions";
 
 interface ICalculateSetting {
     revenues: number | null;
     expenses: number | null;
     selfFinancing: number | null;
     administrative: number | null;
-    disabledButton: boolean;
+    errorType: string;
     calculateButton: boolean;
-    expensesHigherThanIncome: boolean;
+    expensesLessThanIncome: boolean;
     higheSelfFinancingThan: boolean;
     lessAdministrativeExpenses: boolean;
+    income: boolean;
+    exceptionText: string;
+    isException: boolean;
 }
 
 interface ICalculateAction {
@@ -20,23 +24,30 @@ interface ICalculateAction {
     expenses?: number | null;
     selfFinancing?: number | null;
     administrative?: number | null;
-    disabledButton?: boolean;
+    errorType?: string;
     calculateButton?: boolean;
-    expensesHigherThanIncome?: boolean;
+    expensesLessThanIncome?: boolean;
     higheSelfFinancingThan?: boolean;
     lessAdministrativeExpenses?: boolean;
+    income?: boolean;
+    exceptionText?: string;
+    isException?: boolean;
 }
+
 
 const CALCULATE_SETTING: ICalculateSetting = {
     revenues: null,
     expenses: null,
     selfFinancing: null,
     administrative: null,
-    disabledButton: true,
+    errorType: "",
     calculateButton: false,
-    expensesHigherThanIncome: true,
+    expensesLessThanIncome: true,
     higheSelfFinancingThan: true,
     lessAdministrativeExpenses: true,
+    income: true,
+    exceptionText: "",
+    isException: false,
 }
 
 export const CALCULATE_ACTION = {
@@ -49,54 +60,63 @@ export const CALCULATE_ACTION = {
   };
 
 
-  const chackDisable = (calculateState: ICalculateSetting) => {
-    const {administrative, expenses, revenues, selfFinancing} = calculateState
-    if (administrative === null || expenses === null || revenues === null || selfFinancing === null){
-      return true
+  // const chackDisable = (calculateState: ICalculateSetting) => {
+  //   const {administrative, expenses, revenues, selfFinancing} = calculateState
+  //   if (administrative === null || expenses === null || revenues === null || selfFinancing === null){
+  //     return true
+  //   }
+  //   else{
+  //       return false
+  // }
+  // }
+
+  const chackExceptions = (calculateState: Partial<ICalculateAction>): [EException, boolean, string] => {
+    const {expensesLessThanIncome, higheSelfFinancingThan, lessAdministrativeExpenses} = calculateState
+    if (!expensesLessThanIncome) {
+      return [EException.expensesException, true, 'error']
+    }
+    else if (!higheSelfFinancingThan) {
+      return [EException.selfFinancingException, true, 'error']
+    }
+    else if (!lessAdministrativeExpenses) {
+      return [EException.selfFinancingException, true, 'error']
     }
     else{
-        return false
+      return [EException.revenuesException, true, 'success']
+    }
+       
   }
-  }
-
 
 function calculateSettingReducer(calculateState: ICalculateSetting, action: ICalculateAction): ICalculateSetting {
   switch (action.type) {
 
     case CALCULATE_ACTION.SET_REVENUES: {
-        const buttonDis = chackDisable(calculateState)
-        console.log(buttonDis)
         return {
           ...calculateState,
           revenues: action.revenues!,
-          disabledButton: buttonDis,
         };
       }
+
       case CALCULATE_ACTION.SET_EXPENSES: {
-        const buttonDis = chackDisable(calculateState)
-        console.log(buttonDis)
         return {
           ...calculateState,
           expenses: action.expenses!,
-          disabledButton: buttonDis,
         };
       }
+
       case CALCULATE_ACTION.SET_SELF_FINANCING: {
-        const buttonDis = chackDisable(calculateState)
-        console.log(buttonDis)
         return {
           ...calculateState,
           selfFinancing: action.selfFinancing!,
-          disabledButton: buttonDis,
+
         };
       }
+
       case CALCULATE_ACTION.SET_ADMINISTRATIVE: {
-        const buttonDis = chackDisable(calculateState)
-        console.log(buttonDis)
+
         return {
           ...calculateState,
           administrative: action.administrative!,
-          disabledButton: buttonDis,
         };
       }
 
@@ -106,13 +126,19 @@ function calculateSettingReducer(calculateState: ICalculateSetting, action: ICal
           calculateButton: action.calculateButton!,
         }
       }
+
       case CALCULATE_ACTION.SET_NUMBERS_CALCULATE:{
+        const [errors, isExc, exceptionType] = chackExceptions({expensesLessThanIncome: action.expensesLessThanIncome, higheSelfFinancingThan: action.higheSelfFinancingThan, lessAdministrativeExpenses: action.lessAdministrativeExpenses})
+        console.log(errors, isExc, exceptionType)
         return{
           ...calculateState,
           calculateButton: action.calculateButton!,
-          expensesHigherThanIncome: action.expensesHigherThanIncome!,
+          expensesLessThanIncome: action.expensesLessThanIncome!,
           higheSelfFinancingThan: action.higheSelfFinancingThan!,
           lessAdministrativeExpenses: action.lessAdministrativeExpenses!,
+          isException: isExc,
+          exceptionText: String(errors),
+          errorType: exceptionType,
         }
       }
     

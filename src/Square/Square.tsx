@@ -6,6 +6,7 @@ import {EHebText} from "../hebText";
 import CheckIcon from '@mui/icons-material/Check';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import { CALCULATE_ACTION, useCalculateContext } from '../CalculateContext';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 const s = {
     "& .MuiInputLabel-root": { color: '#000000'},//styles the label
@@ -26,13 +27,14 @@ interface ISquareProps {
     subHeadline?: string;
     onChangeText: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
     value: number;
+    outcome: boolean;
 }
 
 const Square = (props: ISquareProps): JSX.Element =>{
 
     const { calculateState, calculateDispatch } = useCalculateContext();
 
-    const {headline, plaseholder, subHeadline, onChangeText, value} = props
+    const {headline, plaseholder, subHeadline, onChangeText, value, outcome} = props
 
     return(
         <>
@@ -117,12 +119,21 @@ const Square = (props: ISquareProps): JSX.Element =>{
                         
                         
                     }}>
-                        <CheckRoundedIcon fontSize="large" sx={{
-                            color:'#F2C46E',
-                            border: '2px solid #3C3D41',
-                            backgroundColor: '#ffffff',
-                            borderRadius: '8px',
-                        }}/>
+                        {outcome?
+                            <CheckRoundedIcon fontSize="large" sx={{
+                                color:'#F2C46E',
+                                border: '2px solid #3C3D41',
+                                backgroundColor: '#ffffff',
+                                borderRadius: '8px',
+                            }}/>
+                            :
+                            <CloseRoundedIcon fontSize="large" sx={{
+                                color:'#BF8174',
+                                border: '2px solid #3C3D41',
+                                backgroundColor: '#ffffff',
+                                borderRadius: '8px',
+                            }}/>
+                        }
                     </Box>
                 }
             </Paper>
