@@ -16,6 +16,7 @@ interface ICalculateSetting {
     income: boolean;
     exceptionText: string;
     isException: boolean;
+    errorTextField: boolean;
 }
 
 interface ICalculateAction {
@@ -32,6 +33,7 @@ interface ICalculateAction {
     income?: boolean;
     exceptionText?: string;
     isException?: boolean;
+    errorTextField?: boolean;
 }
 
 
@@ -48,6 +50,7 @@ const CALCULATE_SETTING: ICalculateSetting = {
     income: true,
     exceptionText: "",
     isException: false,
+    errorTextField: true,
 }
 
 export const CALCULATE_ACTION = {
@@ -56,7 +59,8 @@ export const CALCULATE_ACTION = {
     SET_SELF_FINANCING: "setSelfFinancing",
     SET_ADMINISTRATIVE: "setAdministrative",
     CALCULATE_BUTTOM: "calculateButoon",
-    SET_NUMBERS_CALCULATE: "setNumberCalculate"
+    SET_NUMBERS_CALCULATE: "setNumberCalculate",
+    SET_ERROR_TEXT_FIELD: 'setErrorTextField'
   };
 
 
@@ -139,6 +143,13 @@ function calculateSettingReducer(calculateState: ICalculateSetting, action: ICal
           isException: isExc,
           exceptionText: String(errors),
           errorType: exceptionType,
+        }
+      }
+
+      case CALCULATE_ACTION.SET_ERROR_TEXT_FIELD:{
+        return{
+          ...calculateState,
+          errorTextField: action.errorTextField!,
         }
       }
     

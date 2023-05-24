@@ -19,16 +19,34 @@ const s = {
 
 const ContentSquares = () =>{
 
-    const [revenues, setRevenues] = React.useState<number>(0)
-    const [expenses, setExpenses] = React.useState<number>(0)
-    const [selfFinancing, setSelfFinancing] = React.useState<number>(0)
-    const [administrative, setAdministrative] = React.useState<number>(0)
+    const [revenues, setRevenues] = React.useState<string>("")
+    const [expenses, setExpenses] = React.useState<string>("")
+    const [selfFinancing, setSelfFinancing] = React.useState<string>("")
+    const [administrative, setAdministrative] = React.useState<string>("")
 
     const { calculateState, calculateDispatch } = useCalculateContext();
+    const patternNumber = /^\d+(\.\d+)?$/;
 
     
+    const errorChack = (value: string): boolean => {
+        if (patternNumber.test(value)){
+            calculateDispatch({
+                type: CALCULATE_ACTION.SET_ERROR_TEXT_FIELD,
+                errorTextField: false
+            })
+            return false
+        }
+        else{
+            calculateDispatch({
+                type: CALCULATE_ACTION.SET_ERROR_TEXT_FIELD,
+                errorTextField: true
+            })
+            return true
+        }
+    }
+
     const handleRevenuesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // setRevenues(Number(event.target.value))
+        setRevenues(event.target.value)
         console.log(event.target.value)
         if (event.target.value.length > 0) {
             calculateDispatch({
@@ -42,11 +60,12 @@ const ContentSquares = () =>{
                 revenues: null,
             })
         }
+        errorChack(event.target.value)
         
     };
 
     const handleExpensesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // setExpenses(Number(event.target.value))
+        setExpenses(event.target.value)
         if (event.target.value.length > 0) {
             calculateDispatch({
                 type: CALCULATE_ACTION.SET_EXPENSES,
@@ -59,10 +78,11 @@ const ContentSquares = () =>{
                 expenses: null,
             })
         }
+        errorChack(event.target.value)
     };
 
     const handleSelfFinancingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // setSelfFinancing(Number(event.target.value))
+        setSelfFinancing(event.target.value)
         if (event.target.value.length > 0) {
             calculateDispatch({
                 type: CALCULATE_ACTION.SET_SELF_FINANCING,
@@ -75,11 +95,12 @@ const ContentSquares = () =>{
                 selfFinancing: null,
             })
         }
+        errorChack(event.target.value)
         
     };
     
     const handleAdministrativeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // setAdministrative(Number(event.target.value))
+        setAdministrative(event.target.value)
         if (event.target.value.length > 0) {
             calculateDispatch({
                 type: CALCULATE_ACTION.SET_ADMINISTRATIVE,
@@ -92,6 +113,7 @@ const ContentSquares = () =>{
                 administrative: null,
             })
         }
+        errorChack(event.target.value)
         
     };
 

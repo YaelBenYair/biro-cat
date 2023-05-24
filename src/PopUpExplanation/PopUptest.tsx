@@ -16,7 +16,7 @@ import { useState, useEffect } from 'react';
 const style = {
   position: 'absolute' as 'absolute',
 //   top: '50%',
-  top: {xs: '90%', md: '50%'},
+  top: {xs: '95%', md: '50%'},
   left: '50%',
 //   right: '-50%',
   transform: 'translate(-50%, -50%)',

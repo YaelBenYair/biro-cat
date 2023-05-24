@@ -145,7 +145,7 @@ const Layout = () =>{
                                 }}
                                 size="large"
                                 onClick={handleCalaulate}
-                                disabled={calculateState.administrative === null || calculateState.expenses === null || calculateState.selfFinancing === null || calculateState.revenues === null}
+                                disabled={calculateState.administrative === null || calculateState.expenses === null || calculateState.selfFinancing === null || calculateState.revenues === null || calculateState.errorTextField}
                             >
                                 {EHebText.BUTTON_CALCULATE}
                             </Button>

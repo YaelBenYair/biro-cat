@@ -21,7 +21,7 @@ const PopUpExplanation: React.FC<PopUpExplanationProps> = ({onCloseLogin}) =>{
 
     return(
       <>
-      <Container fixed>
+      {/* <Container fixed>
           <Box sx={{
               height: '600px',
               width: {xs: '300px', md: '1100px'},
@@ -201,7 +201,7 @@ const PopUpExplanation: React.FC<PopUpExplanationProps> = ({onCloseLogin}) =>{
         >המשך
         </Button>
         </Box>
-        </Container>
+        </Container> */}
       </>
     );
 }

@@ -26,7 +26,7 @@ interface ISquareProps {
     plaseholder: string;
     subHeadline?: string;
     onChangeText: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-    value: number;
+    value: string;
     outcome: boolean;
 }
 
@@ -35,6 +35,28 @@ const Square = (props: ISquareProps): JSX.Element =>{
     const { calculateState, calculateDispatch } = useCalculateContext();
 
     const {headline, plaseholder, subHeadline, onChangeText, value, outcome} = props
+
+    // const numberReSnippet = "NaN|-?((\d*\.\d+|\d+)([Ee][+-]?\d+)?|Infinity)";
+    // const validNumber = new RegExp("^("+ numberReSnippet + ")$")
+    // const patternNumber = /^\d+(\.\d+)?$/;
+
+    // const handleError = (): boolean => {
+    //     console.log(patternNumber.test(value))
+    //     if (patternNumber.test(value)){
+    //         calculateDispatch({
+    //             type: CALCULATE_ACTION.SET_ERROR_TEXT_FIELD,
+    //             errorTextField: false
+    //         })
+    //         return false
+    //     }
+    //     else{
+    //         calculateDispatch({
+    //             type: CALCULATE_ACTION.SET_ERROR_TEXT_FIELD,
+    //             errorTextField: true
+    //         })
+    //         return true
+    //     }
+    // }
 
     return(
         <>
@@ -101,6 +123,12 @@ const Square = (props: ISquareProps): JSX.Element =>{
                         type="number"
                         variant="outlined"
                         placeholder={plaseholder}
+                        InputProps={{inputProps:{
+                            min: 0,
+                            pattern: '[0-9]*',
+                        }}}
+                        error={calculateState.errorTextField}
+                        // helperText={handleError() && "Positiv number only"}
                         required/>
                 </Box>
                 </Box>
