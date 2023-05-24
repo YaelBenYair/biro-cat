@@ -121,7 +121,7 @@ const Layout = () =>{
                             </Stack>
                         }
 
-                        {!calculateState.calculateButton?
+                        
                         <Box width={'100%'}
                             sx={{
                                 display: 'flex',
@@ -150,7 +150,7 @@ const Layout = () =>{
                                 {EHebText.BUTTON_CALCULATE}
                             </Button>
                         </Box>
-                        :
+                        {calculateState.calculateButton &&
                         <Box width={'100%'}
                             sx={{
                                 display: 'flex',
